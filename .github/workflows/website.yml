@@ -1,0 +1,57 @@
+name: Website
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build static site
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      # The Pages URL is derived from the repo this runs in, so a rename needs
+      # no code change. RELEASE_REPO is separate because the desktop app it
+      # advertises publishes its releases from a different repo.
+      - name: Build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+          VITE_SITE_OWNER: ${{ github.repository_owner }}
+          VITE_SITE_REPO: ${{ github.event.repository.name }}
+          VITE_RELEASE_REPO: ${{ vars.RELEASE_REPO || 'waku' }}
+        run: bun run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
