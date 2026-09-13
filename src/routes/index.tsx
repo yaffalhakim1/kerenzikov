@@ -271,241 +271,246 @@ function Home() {
   return (
     <TooltipProvider>
       <div className="min-h-dvh">
-        {/* N9 · Edge-aligned minimal. Wordmark left, one action right, and a
-            deliberate void between them. The absence is the design. */}
-        <header className="flex items-center justify-between px-[var(--page-gutter)] py-[var(--space-md)]">
-          <a
-            href={import.meta.env.BASE_URL}
-            className="flex items-center gap-[0.6rem] no-underline"
-          >
-            {/* The mark carries its own dark background, so it reads as a tile
-                in either theme rather than as a floating glyph. */}
-            <img
-              src={`${import.meta.env.BASE_URL}app-icon.png`}
-              alt=""
-              width={24}
-              height={24}
-              className="brand-mark size-6"
-            />
-            <span className="wordmark text-[1.0625rem] text-[var(--color-ink)]">
-              {APP_NAME}
-            </span>
-          </a>
-          <div className="flex items-center gap-[var(--space-2xs)]">
-            <ThemeToggle />
-            <DownloadMenu
-              primaryUrl={primaryUrl}
-              assets={release?.assets ?? null}
-              variant="outline"
-            />
-          </div>
-        </header>
-
-        <main>
-          {/* Opener — a statement and the facts. No badge, no eyebrow. */}
-          <section className="px-[var(--page-gutter)] pt-[var(--space-xl)] pb-[var(--space-2xl)]">
-            <h1 className="display rise text-[length:var(--text-display)]">
-              One window for twelve coding agents.
-            </h1>
-
-            <p className="prose-measure mt-[var(--space-md)] text-[length:var(--text-md)] leading-[1.55] text-[var(--color-ink-2)] text-pretty">
-              It drives the agent CLIs already on your machine, over their own
-              protocols, with your sessions and transcripts on your own disk.
-            </p>
-
-            <div className="mt-[var(--space-lg)] flex flex-wrap items-center gap-x-[var(--space-sm)] gap-y-[var(--space-xs)]">
+        <div className="shell">
+          {/* N9 · Edge-aligned minimal. Wordmark left, one action right, and a
+              deliberate void between them. The absence is the design. */}
+          <header className="flex items-center justify-between py-[var(--space-md)]">
+            <a
+              href={import.meta.env.BASE_URL}
+              className="flex items-center gap-[0.6rem] no-underline"
+            >
+              {/* The mark carries its own dark background, so it reads as a tile
+                  in either theme rather than as a floating glyph. */}
+              <img
+                src={`${import.meta.env.BASE_URL}app-icon.png`}
+                alt=""
+                width={24}
+                height={24}
+                className="brand-mark size-6"
+              />
+              <span className="wordmark text-[1.0625rem] text-[var(--color-ink)]">
+                {APP_NAME}
+              </span>
+            </a>
+            <div className="flex items-center gap-[var(--space-2xs)]">
+              <ThemeToggle />
               <DownloadMenu
                 primaryUrl={primaryUrl}
                 assets={release?.assets ?? null}
-                showIcon
+                variant="outline"
               />
-              {release && <VersionChip version={release.version} />}
             </div>
+          </header>
 
-            {/* F3 · Tabular spec sheet. The facts carry the opener. */}
-            <dl className="mt-[var(--space-2xl)] grid grid-cols-[minmax(0,1fr)] border-t border-[var(--color-rule)]">
-              {SPEC.map((row) => (
-                <div
-                  key={row.key}
-                  className="grid grid-cols-[minmax(0,1fr)] gap-x-[var(--space-md)] gap-y-[var(--space-3xs)] border-b border-[var(--color-rule-2)] py-[var(--space-sm)] sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)]"
-                >
-                  <dt className="label pt-[0.2em]">{row.key}</dt>
-                  <dd className="text-[length:var(--text-sm)] leading-[1.6] text-[var(--color-ink-2)]">
-                    {row.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </section>
+          <main>
+            {/* Opener — a statement, the action, then the facts. No badge,
+                no eyebrow. */}
+            <section className="pt-[var(--space-xl)] pb-[var(--space-2xl)]">
+              <h1 className="display rise text-[length:var(--text-display)]">
+                One window for twelve coding agents.
+              </h1>
 
-          {/* Providers — the marks, then the ones without marks named. */}
-          <section className="px-[var(--page-gutter)] pb-[var(--space-2xl)]">
-            <Label>Drives the agents you already use</Label>
-            <div className="mt-[var(--space-sm)] flex flex-wrap items-center gap-x-[var(--space-lg)] gap-y-[var(--space-sm)]">
-              {PROVIDERS.map((p) => (
-                <Tooltip key={p.slug}>
-                  <TooltipTrigger
-                    render={
-                      <button
-                        type="button"
-                        aria-label={p.label}
-                        className="cursor-default rounded-[2px] text-[var(--color-muted)] outline-none transition-colors hover:text-[var(--color-ink)] focus-visible:text-[var(--color-ink)]"
-                      />
-                    }
-                  >
-                    <span
-                      className="provider-mark size-[20px]"
-                      style={{
-                        maskImage: `url(${import.meta.env.BASE_URL}providers/${p.slug}.svg)`,
-                        WebkitMaskImage: `url(${import.meta.env.BASE_URL}providers/${p.slug}.svg)`,
-                      }}
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent>{p.label}</TooltipContent>
-                </Tooltip>
-              ))}
-            </div>
-            <p className="mono mt-[var(--space-sm)] text-xs text-[var(--color-muted)]">
-              Also {ALSO_DRIVES}
-            </p>
-          </section>
+              <p className="prose-measure mt-[var(--space-md)] text-[length:var(--text-md)] leading-[1.55] text-[var(--color-ink-2)] text-pretty">
+                It drives the agent CLIs already on your machine, over their own
+                protocols, with your sessions and transcripts on your own disk.
+              </p>
 
-          {/* The product, shown plainly. No re-drawn chrome around it.
-              Both captures ship and CSS picks one, so the screenshot follows
-              the site's theme toggle rather than the OS preference. */}
-          <figure className="border-y border-[var(--color-rule)]">
-            <img
-              src={`${import.meta.env.BASE_URL}app-screenshot-dark.png`}
-              alt={`${APP_NAME} showing a coding-agent session: task list on the left, transcript and tool activity in the centre, file diffs on the right`}
-              width={2266}
-              height={1752}
-              className="shot shot-dark block h-auto w-full"
-            />
-            <img
-              src={`${import.meta.env.BASE_URL}app-screenshot-light.png`}
-              alt={`${APP_NAME} showing a coding-agent session: task list on the left, transcript and tool activity in the centre, file diffs on the right`}
-              width={2266}
-              height={1752}
-              className="shot shot-light block h-auto w-full"
-            />
-            <figcaption className="mono border-t border-[var(--color-rule-2)] px-[var(--page-gutter)] py-[var(--space-sm)] text-xs text-[var(--color-muted)]">
-              A session in progress. Tasks on the left, transcript in the
-              middle, diffs on the right.
-            </figcaption>
-          </figure>
+              <div className="mt-[var(--space-lg)] flex flex-wrap items-center gap-x-[var(--space-sm)] gap-y-[var(--space-xs)]">
+                <DownloadMenu
+                  primaryUrl={primaryUrl}
+                  assets={release?.assets ?? null}
+                  showIcon
+                />
+                {release && <VersionChip version={release.version} />}
+              </div>
 
-          {/* The interview. Each heading is the question. */}
-          <section
-            aria-labelledby="interview-heading"
-            className="px-[var(--page-gutter)] py-[var(--space-2xl)]"
-          >
-            <h2
-              id="interview-heading"
-              className="display text-[length:var(--text-xl)]"
-            >
-              Straight answers
-            </h2>
-
-            <div className="mt-[var(--space-lg)]">
-              {INTERVIEW.map((item) => (
-                <div
-                  key={item.q}
-                  className="flex flex-col gap-[var(--space-sm)] border-t border-[var(--color-rule)] py-[var(--space-lg)]"
-                >
-                  <h3 className="display max-w-[24ch] text-[length:var(--text-lg)] text-[var(--color-ink)]">
-                    {item.q}
-                  </h3>
-                  <div className="prose-measure flex flex-col gap-[var(--space-sm)]">
-                    {item.a.map((paragraph) => (
-                      <p
-                        key={paragraph}
-                        className="text-[length:var(--text-base)] leading-[1.65] text-[var(--color-ink-2)]"
+              {/* Providers sit directly under the action, so the reader learns
+                  which agents are covered before the spec sheet asks them to
+                  read further. */}
+              <div className="mt-[var(--space-xl)]">
+                <Label>Drives the agents you already use</Label>
+                <div className="mt-[var(--space-sm)] flex flex-wrap items-center gap-x-[var(--space-lg)] gap-y-[var(--space-sm)]">
+                  {PROVIDERS.map((p) => (
+                    <Tooltip key={p.slug}>
+                      <TooltipTrigger
+                        render={
+                          <button
+                            type="button"
+                            aria-label={p.label}
+                            className="cursor-default rounded-[2px] text-[var(--color-muted)] outline-none transition-colors hover:text-[var(--color-ink)] focus-visible:text-[var(--color-ink)]"
+                          />
+                        }
                       >
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
+                        <span
+                          className="provider-mark size-[20px]"
+                          style={{
+                            maskImage: `url(${import.meta.env.BASE_URL}providers/${p.slug}.svg)`,
+                            WebkitMaskImage: `url(${import.meta.env.BASE_URL}providers/${p.slug}.svg)`,
+                          }}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>{p.label}</TooltipContent>
+                    </Tooltip>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </section>
+                <p className="mono mt-[var(--space-sm)] text-xs text-[var(--color-muted)]">
+                  Also {ALSO_DRIVES}
+                </p>
+              </div>
 
-          {/* Download. */}
-          <section
-            id="download"
-            aria-labelledby="download-heading"
-            className="border-t border-[var(--color-rule)] px-[var(--page-gutter)] py-[var(--space-2xl)]"
-          >
-            <h2
-              id="download-heading"
-              className="display text-[length:var(--text-xl)]"
-            >
-              Get {APP_NAME}
-            </h2>
-            <p className="prose-measure mt-[var(--space-sm)] text-[length:var(--text-base)] leading-[1.65] text-[var(--color-ink-2)]">
-              A per-user installer for Windows, a portable archive beside it,
-              and an arm64 build for ARM machines. The Android companion ships
-              as a universal APK. Install and authenticate at least one agent
-              CLI first; {APP_NAME} drives those, it does not replace them.
-            </p>
-            <div className="mt-[var(--space-lg)] flex flex-wrap items-center gap-x-[var(--space-sm)] gap-y-[var(--space-xs)]">
-              <DownloadMenu
-                primaryUrl={primaryUrl}
-                assets={release?.assets ?? null}
-                showIcon
+              {/* F3 · Tabular spec sheet. The facts carry the opener. */}
+              <dl className="mt-[var(--space-2xl)] grid grid-cols-[minmax(0,1fr)] border-t border-[var(--color-rule)]">
+                {SPEC.map((row) => (
+                  <div
+                    key={row.key}
+                    className="grid grid-cols-[minmax(0,1fr)] gap-x-[var(--space-md)] gap-y-[var(--space-3xs)] border-b border-[var(--color-rule-2)] py-[var(--space-sm)] sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)]"
+                  >
+                    <dt className="label pt-[0.2em]">{row.key}</dt>
+                    <dd className="text-[length:var(--text-sm)] leading-[1.6] text-[var(--color-ink-2)]">
+                      {row.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+
+            {/* The product, shown plainly. No re-drawn chrome around it.
+                Both captures ship and CSS picks one, so the screenshot follows
+                the site's theme toggle rather than the OS preference. */}
+            <figure className="overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-rule)]">
+              <img
+                src={`${import.meta.env.BASE_URL}app-screenshot-dark.png`}
+                alt={`${APP_NAME} showing a coding-agent session: task list on the left, transcript and tool activity in the centre, file diffs on the right`}
+                width={2266}
+                height={1752}
+                className="shot shot-dark block h-auto w-full"
               />
-              <a
-                className="link text-[length:var(--text-sm)]"
-                href={WINDOWS_DOCS_URL}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Requirements
-              </a>
-              <a
-                className="link text-[length:var(--text-sm)]"
-                href={GITHUB_URL}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Source
-              </a>
-              {release && <VersionChip version={release.version} />}
-            </div>
-          </section>
-        </main>
+              <img
+                src={`${import.meta.env.BASE_URL}app-screenshot-light.png`}
+                alt={`${APP_NAME} showing a coding-agent session: task list on the left, transcript and tool activity in the centre, file diffs on the right`}
+                width={2266}
+                height={1752}
+                className="shot shot-light block h-auto w-full"
+              />
+              <figcaption className="mono border-t border-[var(--color-rule-2)] py-[var(--space-sm)] text-xs text-[var(--color-muted)]">
+                A session in progress. Tasks on the left, transcript in the
+                middle, diffs on the right.
+              </figcaption>
+            </figure>
 
-        {/* Ft4 · Dense typographic colophon. */}
-        <footer className="colophon border-t border-[var(--color-rule)] px-[var(--page-gutter)] py-[var(--space-xl)]">
-          <p className="mono max-w-[70ch] text-xs leading-[1.8] text-[var(--color-muted)]">
-            {APP_NAME}
-            {release ? ` v${release.version}` : ''}. Built by{' '}
-            <a
-              className="link"
-              href="https://yafialhakim.netlify.app"
-              target="_blank"
-              rel="noreferrer"
+            {/* The interview. Each heading is the question. */}
+            <section
+              aria-labelledby="interview-heading"
+              className="py-[var(--space-2xl)]"
             >
-              Yafi Alhakim
-            </a>
-            , as a fork of an open-source GPL-3.0 coding-agent client by{' '}
-            <a
-              className="link"
-              href={UPSTREAM_URL}
-              target="_blank"
-              rel="noreferrer"
+              <h2
+                id="interview-heading"
+                className="display text-[length:var(--text-xl)]"
+              >
+                Straight answers
+              </h2>
+
+              <div className="mt-[var(--space-lg)]">
+                {INTERVIEW.map((item) => (
+                  <div
+                    key={item.q}
+                    className="flex flex-col gap-[var(--space-sm)] border-t border-[var(--color-rule)] py-[var(--space-lg)]"
+                  >
+                    <h3 className="display max-w-[24ch] text-[length:var(--text-lg)] text-[var(--color-ink)]">
+                      {item.q}
+                    </h3>
+                    <div className="prose-measure flex flex-col gap-[var(--space-sm)]">
+                      {item.a.map((paragraph) => (
+                        <p
+                          key={paragraph}
+                          className="text-[length:var(--text-base)] leading-[1.65] text-[var(--color-ink-2)]"
+                        >
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Download. */}
+            <section
+              id="download"
+              aria-labelledby="download-heading"
+              className="border-t border-[var(--color-rule)] py-[var(--space-2xl)]"
             >
-              egoist
-            </a>
-            . Written in Rust with GPUI. Set in Space Grotesk, Geist, and Geist
-            Mono. Ships for Windows and Android; the macOS and Linux builds in
-            the source tree go unmaintained. Source and releases at{' '}
-            <a className="link" href={GITHUB_URL} target="_blank" rel="noreferrer">
-              {GITHUB_URL.replace('https://', '')}
-            </a>
-            .
-          </p>
-        </footer>
+              <h2
+                id="download-heading"
+                className="display text-[length:var(--text-xl)]"
+              >
+                Get {APP_NAME}
+              </h2>
+              <p className="prose-measure mt-[var(--space-sm)] text-[length:var(--text-base)] leading-[1.65] text-[var(--color-ink-2)]">
+                A per-user installer for Windows, a portable archive beside it,
+                and an arm64 build for ARM machines. The Android companion ships
+                as a universal APK. Install and authenticate at least one agent
+                CLI first; {APP_NAME} drives those, it does not replace them.
+              </p>
+              <div className="mt-[var(--space-lg)] flex flex-wrap items-center gap-x-[var(--space-sm)] gap-y-[var(--space-xs)]">
+                <DownloadMenu
+                  primaryUrl={primaryUrl}
+                  assets={release?.assets ?? null}
+                  showIcon
+                />
+                <a
+                  className="link text-[length:var(--text-sm)]"
+                  href={WINDOWS_DOCS_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Requirements
+                </a>
+                <a
+                  className="link text-[length:var(--text-sm)]"
+                  href={GITHUB_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Source
+                </a>
+                {release && <VersionChip version={release.version} />}
+              </div>
+            </section>
+          </main>
+
+          {/* Ft4 · Dense typographic colophon. */}
+          <footer className="colophon border-t border-[var(--color-rule)] py-[var(--space-xl)]">
+            <p className="mono max-w-[70ch] text-xs leading-[1.8] text-[var(--color-muted)]">
+              {APP_NAME}
+              {release ? ` v${release.version}` : ''}. Built by{' '}
+              <a
+                className="link"
+                href="https://yafialhakim.netlify.app"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Yafi Alhakim
+              </a>
+              , as a fork of an open-source GPL-3.0 coding-agent client by{' '}
+              <a
+                className="link"
+                href={UPSTREAM_URL}
+                target="_blank"
+                rel="noreferrer"
+              >
+                egoist
+              </a>
+              . Written in Rust with GPUI. Set in Space Grotesk, Geist, and Geist
+              Mono. Ships for Windows and Android; the macOS and Linux builds in
+              the source tree go unmaintained. Source and releases at{' '}
+              <a className="link" href={GITHUB_URL} target="_blank" rel="noreferrer">
+                {GITHUB_URL.replace('https://', '')}
+              </a>
+              .
+            </p>
+          </footer>
+        </div>
       </div>
     </TooltipProvider>
   )

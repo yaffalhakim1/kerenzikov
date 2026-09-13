@@ -84,6 +84,26 @@
 }
 
 @layer components {
+  /* ── Page frame ─────────────────────────────────────────────── */
+
+  /* Centred column with a hairline rule on each side once the viewport is
+     wider than the content, so the page reads as a deliberate measure rather
+     than a stretched full-bleed layout. */
+  .shell {
+    width: 100%;
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--page-gutter);
+  }
+
+  /* The rule appears exactly once the column stops touching the viewport
+     edge, so it frames the content instead of floating inside it. */
+  @media (min-width: 68.75rem) {
+    .shell {
+      border-inline: 1px solid var(--color-rule);
+    }
+  }
+
   /* ── Typographic primitives ─────────────────────────────────── */
 
   .display {

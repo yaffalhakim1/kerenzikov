@@ -59,14 +59,27 @@ async function fetchLatestRelease(): Promise<LatestRelease | null> {
       RELEASES_URL
     return {
       version,
-      // Filenames come from the Cargo package name, which is still `waku`
-      // until the desktop app is renamed too. Keep these in sync with the
-      // artifact paths in .github/workflows/release.yml.
+      // Product-facing artifact names. The desktop and Android builds emit
+      // these since the Kerenzikov rename; the older `Waku-*` names are kept
+      // as a fallback so releases published before the rename still resolve.
+      // Keep in sync with the artifact paths in .github/workflows/release.yml.
       assets: {
-        x64: pick(`Waku-${version}-x86_64-Setup.exe`),
-        arm64: pick(`Waku-${version}-aarch64-Setup.exe`),
-        portableX64: pick(`waku-${version}-x86_64-pc-windows-msvc.zip`),
-        apk: pick(`Waku-${version}-universal.apk`),
+        x64: pick(
+          `Kerenzikov-${version}-x86_64-Setup.exe`,
+          `Waku-${version}-x86_64-Setup.exe`,
+        ),
+        arm64: pick(
+          `Kerenzikov-${version}-aarch64-Setup.exe`,
+          `Waku-${version}-aarch64-Setup.exe`,
+        ),
+        portableX64: pick(
+          `kerenzikov-${version}-x86_64-pc-windows-msvc.zip`,
+          `waku-${version}-x86_64-pc-windows-msvc.zip`,
+        ),
+        apk: pick(
+          `Kerenzikov-${version}-universal.apk`,
+          `Waku-${version}-universal.apk`,
+        ),
       },
     }
   } catch {

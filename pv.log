@@ -1,3 +1,3 @@
-$ vite preview --port "5195" --strictPort
-  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5195[22m/kerenzikov/[39m
+$ vite preview --port "5200" --strictPort
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5200[22m/kerenzikov/[39m
 [2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m

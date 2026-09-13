@@ -92,6 +92,10 @@
   --space-3xl: 7rem;
   --page-gutter: clamp(1.25rem, 5vw, 4rem);
   --measure: 68ch;
+  /* The page is a centred column rather than a full-width stretch, matching
+     the original landing page's 1100px frame. Narrow enough to keep the hero
+     headline and spec sheet at a readable measure on wide displays. */
+  --content-max: 68.75rem;
 
   /* ── Motion ─────────────────────────────────────────────────── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
