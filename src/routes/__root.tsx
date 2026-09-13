@@ -10,7 +10,7 @@ import type { ReactNode } from 'react'
 import { SITE_URL } from '@/lib/release'
 import appCss from '@/styles.css?url'
 
-const TITLE = 'Kerenzikov — one native Windows window for every coding agent'
+const TITLE = 'Kerenzikov: one Windows window for twelve coding agents'
 const DESCRIPTION =
   'A native Windows app for local coding agents. Twelve providers over their own protocols, one timeline, sessions and transcripts on your own disk. OpenCode first, plus Claude Code, Codex, Amp, Cursor, Grok, Kimi, and Pi.'
 

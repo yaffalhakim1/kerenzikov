@@ -46,82 +46,82 @@ const ALSO_DRIVES = 'Copilot CLI · Fx · DeepSeek Harness'
 
 /** The spec sheet is the identity: the facts, stated flatly. */
 const SPEC: { key: string; value: string }[] = [
-  { key: 'Form factor', value: 'One native binary. Rust + GPUI, no browser engine.' },
+  { key: 'Form factor', value: 'One native binary. Rust and GPUI, no browser engine.' },
   { key: 'Platforms', value: 'Windows x86_64 · Windows arm64 · Android (building)' },
   { key: 'Agents', value: '12 providers over their own native protocols' },
   { key: 'Session model', value: 'One long-lived process per conversation' },
   { key: 'Storage', value: 'Local. SQLite, blob store, your user profile.' },
-  { key: 'Updates', value: 'Manual. No updater, no feed.' },
+  { key: 'Updates', value: 'By hand. No updater, no feed.' },
   { key: 'Licence', value: 'GPL-3.0-only' },
-  { key: 'Origin', value: 'Forked from an open-source GPL project' },
+  { key: 'Origin', value: 'A fork of an open-source GPL project' },
 ]
 
 /** The interview. Real questions, answered concretely. */
 const INTERVIEW: { q: string; a: string[] }[] = [
   {
-    q: 'What is this, exactly?',
+    q: 'What is this?',
     a: [
-      'A native desktop app for running and managing local coding agents. One window holds every project, every session, every transcript.',
-      'It is a single Rust binary rendered by GPUI — the GPU-accelerated framework behind Zed — not a browser engine wearing a window frame.',
+      'A native desktop app for running and managing local coding agents. One window holds your projects and their sessions.',
+      'GPUI, the GPU-accelerated framework behind Zed, draws the interface from a single Rust binary. No browser engine runs inside it.',
     ],
   },
   {
     q: 'Do I need new API keys or subscriptions?',
     a: [
-      'No. Kerenzikov drives the agent CLIs already installed and authenticated on your machine. It detects each binary on launch and talks to it directly, so your existing logins, plans, and rate limits apply unchanged.',
+      'No. Kerenzikov drives the agent CLIs already installed and authenticated on your machine. It finds each binary on launch and talks to it, so your existing logins and rate limits apply unchanged.',
     ],
   },
   {
-    q: 'How can one app drive twelve different agents?',
+    q: 'How does one app drive twelve agents?',
     a: [
-      'Each provider is reached through its strongest native interface — stream-json, JSON-RPC, the Agent Client Protocol, HTTP with server-sent events, or NDJSON — and normalized into one provider-neutral model.',
-      'A session spans the whole conversation. Switching providers mid-project keeps each agent’s own context instead of replaying a transcript at it.',
+      'Kerenzikov reaches each provider through its strongest native interface: stream-json, JSON-RPC, the Agent Client Protocol, HTTP with server-sent events, or NDJSON. It normalizes all of them into one provider-neutral model.',
+      'Each agent keeps its own context when you switch providers mid-project.',
     ],
   },
   {
     q: 'What happens when an agent edits my code?',
     a: [
-      'Every prompt checkpoints your working tree under a hidden git ref. Rolling back restores the code and the provider conversation together, so the two never drift apart. You can also branch from an earlier turn.',
+      'Kerenzikov checkpoints your working tree under a hidden git ref before each prompt. When you roll back, the code and the provider conversation return to that point together, so they stay in step. You can also branch from an earlier turn.',
     ],
   },
   {
     q: 'Where does my data live?',
     a: [
-      'On your disk. Tasks and transcripts in a local SQLite database, attachments in a local blob store, settings in your user profile.',
-      'There is no account and no hosted service between you and your agents.',
+      'On your disk. Tasks and transcripts go in a local SQLite database, attachments in a blob store, and settings in your user profile.',
+      'Your data does not pass through any server we run.',
     ],
   },
   {
     q: 'Can I drive it without a mouse?',
     a: [
-      'Yes. Ctrl+N starts a session, Ctrl+Tab switches tasks, Ctrl+L focuses the composer, Escape stops a turn. Enter queues a follow-up while the agent is working; Ctrl+Enter steers the turn already in flight.',
-      'Every control is reachable from the keyboard, and focus is always visible.',
+      'Yes. Ctrl+N starts a session, Ctrl+Tab switches tasks, Ctrl+L focuses the composer, and Escape stops a turn. Enter queues a follow-up while the agent works; Ctrl+Enter steers the turn already in flight.',
+      'Controls are reachable from the keyboard, and focus stays visible.',
     ],
   },
   {
     q: 'Does it phone home?',
     a: [
-      'Only when the build was compiled with an analytics endpoint, and then only coarse events — app version, platform, and which provider ran.',
-      'Prompts, file paths, project names, and provider output never leave the machine. The switch is in Settings.',
+      'Only if the build includes an analytics endpoint, and then only coarse events: app version, platform, and which provider ran.',
+      'Prompts, file paths, project names, and provider output stay on your machine. The switch is in Settings.',
     ],
   },
   {
     q: 'What about macOS and Linux?',
     a: [
-      'Not built here. This fork targets Windows. The desktop app that was native on macOS is still carried in the source, but nobody maintains or ships those builds, so treat them as unavailable rather than broken.',
-      'If you are on macOS or Linux, use the upstream project instead — the link is in the footer.',
+      'Not built here. This fork targets Windows. The macOS-native desktop code is still in the source tree, but no one maintains or ships those builds, so treat them as unavailable rather than broken.',
+      'If you are on macOS or Linux, use the upstream project. The link is in the footer.',
     ],
   },
   {
     q: 'Is this a fork?',
     a: [
-      'Yes, of an open-source GPL-3.0 coding-agent client, tuned here for Windows with OpenCode as the best-supported provider. The licence and the upstream attribution travel with it.',
+      'Yes. It is a fork of an open-source GPL-3.0 coding-agent client, tuned here for Windows, with OpenCode as the best-supported provider. Upstream is credited in the footer.',
     ],
   },
   {
     q: 'How do updates work?',
     a: [
-      'Manually. Kerenzikov ships no auto-updater and no update feed, so nothing replaces your binary behind your back. Download a new release when you want one.',
+      'By hand. Kerenzikov ships no auto-updater and no update feed, so a new release lands only when you install it. Download one when you want it.',
     ],
   },
 ]
@@ -294,13 +294,12 @@ function Home() {
           {/* Opener — a statement and the facts. No badge, no eyebrow. */}
           <section className="px-[var(--page-gutter)] pt-[var(--space-xl)] pb-[var(--space-2xl)]">
             <h1 className="display rise text-[length:var(--text-display)]">
-              One window for every coding agent.
+              One window for twelve coding agents.
             </h1>
 
             <p className="prose-measure mt-[var(--space-md)] text-[length:var(--text-md)] leading-[1.55] text-[var(--color-ink-2)] text-pretty">
-              A single native binary that drives the agent CLIs already on your
-              machine — over their own protocols, on your own disk, with no
-              account in between.
+              It drives the agent CLIs already on your machine, over their own
+              protocols, with your sessions and transcripts on your own disk.
             </p>
 
             <div className="mt-[var(--space-lg)] flex flex-wrap items-center gap-x-[var(--space-sm)] gap-y-[var(--space-xs)]">
@@ -379,7 +378,8 @@ function Home() {
               className="shot shot-light block h-auto w-full"
             />
             <figcaption className="mono border-t border-[var(--color-rule-2)] px-[var(--page-gutter)] py-[var(--space-sm)] text-xs text-[var(--color-muted)]">
-              A session in progress. Tasks left, transcript centre, diffs right.
+              A session in progress. Tasks on the left, transcript in the
+              middle, diffs on the right.
             </figcaption>
           </figure>
 
@@ -432,11 +432,10 @@ function Home() {
               Get {APP_NAME}
             </h2>
             <p className="prose-measure mt-[var(--space-sm)] text-[length:var(--text-base)] leading-[1.65] text-[var(--color-ink-2)]">
-              Per-user installer for Windows, with a portable archive beside
-              it and an arm64 build for ARM machines. The Android companion
-              ships as a universal APK. Install and authenticate at least one
-              agent CLI first — {APP_NAME} drives those, it does not replace
-              them.
+              A per-user installer for Windows, a portable archive beside it,
+              and an arm64 build for ARM machines. The Android companion ships
+              as a universal APK. Install and authenticate at least one agent
+              CLI first; {APP_NAME} drives those, it does not replace them.
             </p>
             <div className="mt-[var(--space-lg)] flex flex-wrap items-center gap-x-[var(--space-sm)] gap-y-[var(--space-xs)]">
               <DownloadMenu
@@ -469,7 +468,7 @@ function Home() {
         <footer className="colophon border-t border-[var(--color-rule)] px-[var(--page-gutter)] py-[var(--space-xl)]">
           <p className="mono max-w-[70ch] text-xs leading-[1.8] text-[var(--color-muted)]">
             {APP_NAME}
-            {release ? ` v${release.version}` : ''} — built by{' '}
+            {release ? ` v${release.version}` : ''}. Built by{' '}
             <a
               className="link"
               href="https://yafialhakim.netlify.app"
@@ -478,7 +477,7 @@ function Home() {
             >
               Yafi Alhakim
             </a>
-            . A fork of an open-source GPL-3.0 coding-agent client by{' '}
+            , as a fork of an open-source GPL-3.0 coding-agent client by{' '}
             <a
               className="link"
               href={UPSTREAM_URL}
@@ -487,9 +486,9 @@ function Home() {
             >
               egoist
             </a>
-            . Built with Rust, GPUI, Space Grotesk, Geist, and Geist Mono.
-            Windows and Android only; macOS and Linux builds are unmaintained
-            here. Source and releases at{' '}
+            . Written in Rust with GPUI. Set in Space Grotesk, Geist, and Geist
+            Mono. Ships for Windows and Android; the macOS and Linux builds in
+            the source tree go unmaintained. Source and releases at{' '}
             <a className="link" href={GITHUB_URL} target="_blank" rel="noreferrer">
               {GITHUB_URL.replace('https://', '')}
             </a>
