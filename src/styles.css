@@ -103,6 +103,15 @@
     letter-spacing: -0.02em;
   }
 
+  /* The logo art is a full-bleed square with its own dark ground, so it needs
+     a matching radius to sit in the header as a tile rather than a raw block. */
+  .brand-mark {
+    display: block;
+    flex: none;
+    border-radius: var(--radius-card);
+    object-fit: cover;
+  }
+
   /* Small caps label. Tracking is the only ornament this page uses. */
   .label {
     font-family: var(--font-mono-family);

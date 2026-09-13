@@ -276,9 +276,20 @@ function Home() {
         <header className="flex items-center justify-between px-[var(--page-gutter)] py-[var(--space-md)]">
           <a
             href={import.meta.env.BASE_URL}
-            className="wordmark text-[1.0625rem] text-[var(--color-ink)] no-underline"
+            className="flex items-center gap-[0.6rem] no-underline"
           >
-            {APP_NAME}
+            {/* The mark carries its own dark background, so it reads as a tile
+                in either theme rather than as a floating glyph. */}
+            <img
+              src={`${import.meta.env.BASE_URL}app-icon.png`}
+              alt=""
+              width={24}
+              height={24}
+              className="brand-mark size-6"
+            />
+            <span className="wordmark text-[1.0625rem] text-[var(--color-ink)]">
+              {APP_NAME}
+            </span>
           </a>
           <div className="flex items-center gap-[var(--space-2xs)]">
             <ThemeToggle />
