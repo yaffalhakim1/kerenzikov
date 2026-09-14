@@ -8,12 +8,12 @@ import { queryOptions } from '@tanstack/react-query'
  *   VITE_SITE_REPO     this repo's name (drives the Pages URL)
  *   VITE_RELEASE_REPO  repo whose GitHub Releases the download buttons point at
  *
- * The site is published from `kerenzikov`; the app it advertises still ships
- * its releases from `waku`, so the two are set independently.
+ * The site is published from `kerenzikov`; the app it advertises ships its
+ * releases from `Kerenzikov-app`, so the two are set independently.
  */
 export const OWNER = import.meta.env.VITE_SITE_OWNER ?? 'yaffalhakim1'
 export const REPO = import.meta.env.VITE_SITE_REPO ?? 'kerenzikov'
-export const RELEASE_REPO = import.meta.env.VITE_RELEASE_REPO ?? 'waku'
+export const RELEASE_REPO = import.meta.env.VITE_RELEASE_REPO ?? 'Kerenzikov-app'
 
 export const SITE_URL = `https://${OWNER}.github.io/${REPO}`
 export const GITHUB_URL = `https://github.com/${OWNER}/${RELEASE_REPO}`

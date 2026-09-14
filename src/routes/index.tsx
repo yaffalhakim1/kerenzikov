@@ -25,6 +25,7 @@ export const Route = createFileRoute('/')({
 
 const UPSTREAM_URL = 'https://github.com/egoist/waku'
 const WINDOWS_DOCS_URL = `${GITHUB_URL}/blob/main/docs/windows.md`
+const CHANGELOG_URL = `${GITHUB_URL}/blob/main/CHANGELOG.md`
 
 const APP_NAME = 'Kerenzikov'
 const THEME_KEY = 'kerenzikov-theme'
@@ -465,6 +466,14 @@ function Home() {
                   rel="noreferrer"
                 >
                   Requirements
+                </a>
+                <a
+                  className="link text-[length:var(--text-sm)]"
+                  href={CHANGELOG_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  What&apos;s new
                 </a>
                 <a
                   className="link text-[length:var(--text-sm)]"
