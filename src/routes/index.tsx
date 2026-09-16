@@ -55,7 +55,7 @@ const SPEC: { key: string; value: string }[] = [
   { key: 'Agents', value: '14 providers over their own native protocols' },
   { key: 'Session model', value: 'One long-lived process per conversation' },
   { key: 'Storage', value: 'Local. SQLite, blob store, your user profile.' },
-  { key: 'Updates', value: 'By hand. No updater, no feed.' },
+  { key: 'Updates', value: 'In place. Windows and Android check a feed on launch.' },
   { key: 'Licence', value: 'GPL-3.0-only' },
   { key: 'Origin', value: 'A fork of an open-source GPL project' },
 ]
@@ -125,7 +125,8 @@ const INTERVIEW: { q: string; a: string[] }[] = [
   {
     q: 'How do updates work?',
     a: [
-      'By hand. Kerenzikov ships no auto-updater and no update feed, so a new release lands only when you install it. Download one when you want it.',
+      'The first install is manual. After that, the Windows build checks a signed update feed on launch and replaces itself in place, and the Android build checks a release manifest and hands the new APK to your installer.',
+      'Both checks can be turned off in Settings, and a release installs only when you accept it.',
     ],
   },
 ]
@@ -452,6 +453,8 @@ function Home() {
                 and an arm64 build for ARM machines. The Android companion ships
                 as a universal APK. Install and authenticate at least one agent
                 CLI first; {APP_NAME} drives those, it does not replace them.
+                This first install is the manual one: the Windows and Android
+                builds update themselves from here on.
               </p>
               <div className="mt-[var(--space-lg)] flex flex-wrap items-center gap-x-[var(--space-sm)] gap-y-[var(--space-xs)]">
                 <DownloadMenu
