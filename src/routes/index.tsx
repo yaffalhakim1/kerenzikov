@@ -30,26 +30,29 @@ const CHANGELOG_URL = `${GITHUB_URL}/blob/main/CHANGELOG.md`
 const APP_NAME = 'Kerenzikov'
 const THEME_KEY = 'kerenzikov-theme'
 
-/** Marks that exist in `public/providers/`. The rest are named in the line below. */
+/** Every mark in `public/providers/`, in the order the app lists them. */
 const PROVIDERS = [
   { slug: 'opencode', label: 'OpenCode' },
+  { slug: 'opencode2', label: 'OpenCode 2' },
   { slug: 'claude', label: 'Claude Code' },
   { slug: 'openai', label: 'Codex CLI' },
   { slug: 'amp', label: 'Amp' },
   { slug: 'cursor', label: 'Cursor CLI' },
+  { slug: 'copilot', label: 'Copilot CLI' },
   { slug: 'grok', label: 'Grok Build' },
   { slug: 'kimi', label: 'Kimi Code' },
+  { slug: 'jcode', label: 'Jcode' },
+  { slug: 'fx', label: 'Vercel Fx' },
+  { slug: 'deepseek', label: 'DeepSeek Harness' },
   { slug: 'pi', label: 'Pi' },
   { slug: 'ohmypi', label: 'Oh My Pi' },
 ]
-
-const ALSO_DRIVES = 'Copilot CLI · Fx · DeepSeek Harness'
 
 /** The spec sheet is the identity: the facts, stated flatly. */
 const SPEC: { key: string; value: string }[] = [
   { key: 'Form factor', value: 'One native binary. Rust and GPUI, no browser engine.' },
   { key: 'Platforms', value: 'Windows x86_64 · Windows arm64 · Android (building)' },
-  { key: 'Agents', value: '12 providers over their own native protocols' },
+  { key: 'Agents', value: '14 providers over their own native protocols' },
   { key: 'Session model', value: 'One long-lived process per conversation' },
   { key: 'Storage', value: 'Local. SQLite, blob store, your user profile.' },
   { key: 'Updates', value: 'By hand. No updater, no feed.' },
@@ -73,7 +76,7 @@ const INTERVIEW: { q: string; a: string[] }[] = [
     ],
   },
   {
-    q: 'How does one app drive twelve agents?',
+    q: 'How does one app drive fourteen agents?',
     a: [
       'Kerenzikov reaches each provider through its strongest native interface: stream-json, JSON-RPC, the Agent Client Protocol, HTTP with server-sent events, or NDJSON. It normalizes all of them into one provider-neutral model.',
       'Each agent keeps its own context when you switch providers mid-project.',
@@ -308,7 +311,7 @@ function Home() {
                 no eyebrow. */}
             <section className="pt-[var(--space-xl)] pb-[var(--space-2xl)]">
               <h1 className="display rise text-[length:var(--text-display)]">
-                One window for twelve coding agents.
+                One window for fourteen coding agents.
               </h1>
 
               <p className="prose-measure mt-[var(--space-md)] text-[length:var(--text-md)] leading-[1.55] text-[var(--color-ink-2)] text-pretty">
@@ -354,9 +357,6 @@ function Home() {
                     </Tooltip>
                   ))}
                 </div>
-                <p className="mono mt-[var(--space-sm)] text-xs text-[var(--color-muted)]">
-                  Also {ALSO_DRIVES}
-                </p>
               </div>
 
               {/* F3 · Tabular spec sheet. The facts carry the opener. */}
