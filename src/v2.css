@@ -1,0 +1,375 @@
+/* Hallmark · macrostructure: Catalogue · nav: N7 brutal slab · footer: Ft2 inline single line
+ * theme: token-reuse (tokens.css) · accent unchanged: mint green 155°, brand register shared with v1
+ * context: explicit · genre: modern-minimal → brutalist override · enrichment: none
+ *
+ * Catalogue knobs: density 5-up · card content mark+label only · micro-action none.
+ * N7 knobs: border 2px · tracked uppercase · CTA text-only.
+ * Ft2 knobs: order credit-first · separator middot · dense.
+ *
+ * Honest copy: no metrics, no testimonials. The grid is the argument.
+ */
+
+/* ── N7 · Brutal slab ─────────────────────────────────────────── */
+.k2-nav {
+  border-bottom: 2px solid var(--color-ink);
+}
+
+.k2-nav-inner {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  min-height: 56px;
+}
+
+.k2-wordmark {
+  font-family: var(--font-display-family);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: var(--text-base);
+  color: var(--color-ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.k2-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.k2-link {
+  font-family: var(--font-mono-family);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--dur-short) var(--ease-out);
+}
+
+.k2-link:hover,
+.k2-link[aria-current='page'] {
+  color: var(--color-ink);
+}
+
+/* ── Page frame ───────────────────────────────────────────────── */
+.k2-shell {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+/* ── Catalogue display ────────────────────────────────────────── */
+.k2-display {
+  font-family: var(--font-display-family);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+/* Inventory header line: count · date · qualifier. No adjectives. */
+.k2-meta {
+  font-family: var(--font-mono-family);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-2);
+}
+
+.k2-label {
+  font-family: var(--font-mono-family);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ── Harness grid — the catalogue body ────────────────────────── */
+.k2-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+  border-top: 1px solid var(--color-ink);
+  border-left: 1px solid var(--color-ink);
+}
+
+.k2-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-right: 1px solid var(--color-ink);
+  border-bottom: 1px solid var(--color-ink);
+  background: transparent;
+  text-align: left;
+  min-height: 112px;
+}
+
+.k2-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2xs);
+}
+
+/* Inventory index, tabular so 01…14 align. */
+.k2-num {
+  font-family: var(--font-mono-family);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-muted);
+}
+
+.k2-card-name {
+  font-family: var(--font-display-family);
+  font-weight: 600;
+  font-size: var(--text-base);
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  line-height: 1.2;
+}
+
+/* Android step titles — same voice as the harness cards, own class so the
+   two never drift together by accident. */
+.k2-note-title {
+  font-family: var(--font-display-family);
+  font-weight: 600;
+  font-size: var(--text-base);
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* Flag only what is true: OpenCode is the best-supported provider.
+   Neutral ink — the accent is reserved for interactive elements. */
+.k2-flag {
+  font-family: var(--font-mono-family);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+}
+
+.k2-mark {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-color: currentColor;
+  color: var(--color-ink-2);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+/* ── Screenshot — hairline border, square corners ─────────────── */
+.k2-figure {
+  border: 1px solid var(--color-ink);
+  overflow: hidden;
+}
+
+/* ── Facts table ──────────────────────────────────────────────── */
+.k2-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  border-top: 1px solid var(--color-ink);
+  border-left: 1px solid var(--color-ink);
+}
+
+.k2-facts > div {
+  padding: var(--space-sm) var(--space-md);
+  border-right: 1px solid var(--color-ink);
+  border-bottom: 1px solid var(--color-ink);
+}
+
+/* Square icon-only theme toggle — mirrors v1's icon-btn in slab language. */
+.k2-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: color var(--dur-short) var(--ease-out);
+}
+
+.k2-icon-btn:hover {
+  color: var(--color-ink);
+}
+
+.k2-icon-btn:active {
+  transform: translateY(1px);
+}
+
+/* ── Slab button ──────────────────────────────────────────────── */.k2-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  white-space: nowrap;
+  font-family: var(--font-mono-family);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding: 0.75rem 1.25rem;
+  min-height: 44px;
+  border: 2px solid var(--color-ink);
+  border-radius: 0;
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out);
+}
+
+/* Brutalist hover: the slab inverts, it does not glow. */
+.k2-btn:hover {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.k2-btn:active {
+  transform: translateY(2px);
+}
+
+/* ── Ft2 · Inline single line ─────────────────────────────────── */
+.k2-footer {
+  border-top: 2px solid var(--color-ink);
+}
+
+.k2-footer-inner {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: var(--space-md) var(--page-gutter);
+  font-family: var(--font-mono-family);
+  font-size: var(--text-xs);
+  line-height: 1.8;
+  color: var(--color-muted);
+}
+
+.k2-footer a {
+  color: var(--color-accent-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+  transition: color var(--dur-short) var(--ease-out);
+}
+
+.k2-footer a:hover {
+  color: var(--color-ink);
+}
+
+/* ── Android · F5 annotated screenshot ──────────────────────────
+   One strip, one viewport: all four phones side by side with the note
+   under each. At full page width the strip fits without scrolling;
+   narrower viewports scroll it sideways with snap. */
+.k2-android {
+  display: flex;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--space-sm);
+}
+
+.k2-android-step {
+  flex: none;
+  width: 220px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.k2-android-note {
+  min-width: 0;
+}
+
+/* Phone mockup — devices.css Pixel 6 Pro frame (MIT), scaled down.
+   The library is authored at 404×862. The device is absolutely
+   positioned inside the wrapper, so the unscaled 862px layout box
+   cannot inflate the step; the wrapper alone sets the height. */
+.k2-phone-scale {
+  flex: none;
+  width: 220px;
+  aspect-ratio: 404 / 862;
+  position: relative;
+}
+
+.k2-phone-scale .device {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  transform: scale(calc(220 / 404));
+  transform-origin: top left;
+}
+
+.k2-phone-scale .device .device-screen {
+  padding: 0;
+}
+
+/* The real capture replaces the black placeholder screen. */
+.k2-phone-shot {
+  width: 376px;
+  height: 816px;
+  object-fit: cover;
+}
+
+.k2-android-device {
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Mobile ───────────────────────────────────────────────────── */
+@media (pointer: coarse) {
+  .k2-link {
+    padding: 1rem 0;
+  }
+}
+
+@media (max-width: 40rem) {
+  .k2-links {
+    gap: var(--space-sm);
+  }
+
+  .k2-display {
+    font-size: clamp(2rem, 11vw, 2.75rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k2-btn,
+  .k2-card,
+  .k2-link,
+  .k2-footer a {
+    transition: none;
+  }
+
+  .k2-btn:active {
+    transform: none;
+  }
+}

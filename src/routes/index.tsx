@@ -2,25 +2,15 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { Menu } from '@base-ui/react/menu'
 import { Download, Moon, Smartphone, Sun } from 'lucide-react'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
-import {
-  GITHUB_URL,
-  RELEASES_URL,
-  releaseQuery,
-} from '@/lib/release'
+import { GITHUB_URL, RELEASES_URL, releaseQuery } from '@/lib/release'
 import { useEffect, useState } from 'react'
-
+import 'devices.css/dist/devices.min.css'
+import '../v2.css'
 export const Route = createFileRoute('/')({
   loader: ({ context }) => {
-    // Fire-and-forget: the version chip streams in when the GitHub API answers.
     void context.queryClient.prefetchQuery(releaseQuery)
   },
-  component: Home,
+  component: V2,
 })
 
 const UPSTREAM_URL = 'https://github.com/egoist/waku'
@@ -30,112 +20,8 @@ const CHANGELOG_URL = `${GITHUB_URL}/blob/main/CHANGELOG.md`
 const APP_NAME = 'Kerenzikov'
 const THEME_KEY = 'kerenzikov-theme'
 
-/** Every mark in `public/providers/`, in the order the app lists them. */
-const PROVIDERS = [
-  { slug: 'opencode', label: 'OpenCode' },
-  { slug: 'opencode2', label: 'OpenCode 2' },
-  { slug: 'claude', label: 'Claude Code' },
-  { slug: 'openai', label: 'Codex CLI' },
-  { slug: 'amp', label: 'Amp' },
-  { slug: 'cursor', label: 'Cursor CLI' },
-  { slug: 'copilot', label: 'Copilot CLI' },
-  { slug: 'grok', label: 'Grok Build' },
-  { slug: 'kimi', label: 'Kimi Code' },
-  { slug: 'jcode', label: 'Jcode' },
-  { slug: 'fx', label: 'Vercel Fx' },
-  { slug: 'deepseek', label: 'DeepSeek Harness' },
-  { slug: 'pi', label: 'Pi' },
-  { slug: 'ohmypi', label: 'Oh My Pi' },
-]
-
-/** The spec sheet is the identity: the facts, stated flatly. */
-const SPEC: { key: string; value: string }[] = [
-  { key: 'Form factor', value: 'One native binary. Rust and GPUI, no browser engine.' },
-  { key: 'Platforms', value: 'Windows x86_64 · Windows arm64 · Android (building)' },
-  { key: 'Agents', value: '14 providers over their own native protocols' },
-  { key: 'Session model', value: 'One long-lived process per conversation' },
-  { key: 'Storage', value: 'Local. SQLite, blob store, your user profile.' },
-  { key: 'Updates', value: 'In place. Windows and Android check a feed on launch.' },
-  { key: 'Licence', value: 'GPL-3.0-only' },
-  { key: 'Origin', value: 'A fork of an open-source GPL project' },
-]
-
-/** The interview. Real questions, answered concretely. */
-const INTERVIEW: { q: string; a: string[] }[] = [
-  {
-    q: 'What is this?',
-    a: [
-      'A native desktop app for running and managing local coding agents. One window holds your projects and their sessions.',
-      'GPUI, the GPU-accelerated framework behind Zed, draws the interface from a single Rust binary. No browser engine runs inside it.',
-    ],
-  },
-  {
-    q: 'Do I need new API keys or subscriptions?',
-    a: [
-      'No. Kerenzikov drives the agent CLIs already installed and authenticated on your machine. It finds each binary on launch and talks to it, so your existing logins and rate limits apply unchanged.',
-    ],
-  },
-  {
-    q: 'How does one app drive fourteen agents?',
-    a: [
-      'Kerenzikov reaches each provider through its strongest native interface: stream-json, JSON-RPC, the Agent Client Protocol, HTTP with server-sent events, or NDJSON. It normalizes all of them into one provider-neutral model.',
-      'Each agent keeps its own context when you switch providers mid-project.',
-    ],
-  },
-  {
-    q: 'What happens when an agent edits my code?',
-    a: [
-      'Kerenzikov checkpoints your working tree under a hidden git ref before each prompt. When you roll back, the code and the provider conversation return to that point together, so they stay in step. You can also branch from an earlier turn.',
-    ],
-  },
-  {
-    q: 'Where does my data live?',
-    a: [
-      'On your disk. Tasks and transcripts go in a local SQLite database, attachments in a blob store, and settings in your user profile.',
-      'Your data does not pass through any server we run.',
-    ],
-  },
-  {
-    q: 'Can I drive it without a mouse?',
-    a: [
-      'Yes. Ctrl+N starts a session, Ctrl+Tab switches tasks, Ctrl+L focuses the composer, and Escape stops a turn. Enter queues a follow-up while the agent works; Ctrl+Enter steers the turn already in flight.',
-      'Controls are reachable from the keyboard, and focus stays visible.',
-    ],
-  },
-  {
-    q: 'Does it phone home?',
-    a: [
-      'Only if the build includes an analytics endpoint, and then only coarse events: app version, platform, and which provider ran.',
-      'Prompts, file paths, project names, and provider output stay on your machine. The switch is in Settings.',
-    ],
-  },
-  {
-    q: 'What about macOS and Linux?',
-    a: [
-      'Not built here. This fork targets Windows. The macOS-native desktop code is still in the source tree, but no one maintains or ships those builds, so treat them as unavailable rather than broken.',
-      'If you are on macOS or Linux, use the upstream project. The link is in the footer.',
-    ],
-  },
-  {
-    q: 'Is this a fork?',
-    a: [
-      'Yes. It is a fork of an open-source GPL-3.0 coding-agent client, tuned here for Windows, with OpenCode as the best-supported provider. Upstream is credited in the footer.',
-    ],
-  },
-  {
-    q: 'How do updates work?',
-    a: [
-      'The first install is manual. After that, the Windows build checks a signed update feed on launch and replaces itself in place, and the Android build checks a release manifest and hands the new APK to your installer.',
-      'Both checks can be turned off in Settings, and a release installs only when you accept it.',
-    ],
-  },
-]
-
-function Label({ children }: { children: React.ReactNode }) {
-  return <p className="label">{children}</p>
-}
-
-/** Dark is the default; the choice persists across visits. */
+/** Dark is the default; the choice persists across visits. Same key and
+    mechanism as the v1 page, so both pages agree on the active register. */
 function ThemeToggle() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
 
@@ -163,7 +49,7 @@ function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="icon-btn"
+      className="k2-icon-btn"
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
@@ -172,11 +58,67 @@ function ThemeToggle() {
   )
 }
 
+const PROVIDERS = [
+  { slug: 'opencode', label: 'OpenCode', flag: 'Best supported' },
+  { slug: 'opencode2', label: 'OpenCode 2' },
+  { slug: 'claude', label: 'Claude Code' },
+  { slug: 'openai', label: 'Codex CLI' },
+  { slug: 'amp', label: 'Amp' },
+  { slug: 'cursor', label: 'Cursor CLI' },
+  { slug: 'copilot', label: 'Copilot CLI' },
+  { slug: 'grok', label: 'Grok Build' },
+  { slug: 'kimi', label: 'Kimi Code' },
+  { slug: 'jcode', label: 'Jcode' },
+  { slug: 'fx', label: 'Vercel Fx' },
+  { slug: 'deepseek', label: 'DeepSeek Harness' },
+  { slug: 'pi', label: 'Pi' },
+  { slug: 'ohmypi', label: 'Oh My Pi' },
+]
+
+const ANDROID_SHOTS = [
+  {
+    n: '01',
+    src: 'android-new-task.jpg',
+    alt: 'Android app New Task screen with quick-start chips, machine and project pickers, and the composer',
+    title: 'Start a task',
+    desc: 'Quick-start chips, machine and project pickers, and the composer.',
+  },
+  {
+    n: '02',
+    src: 'android-tasks.jpg',
+    alt: 'Android app task list grouped by day with provider marks and status per task',
+    title: 'Every task, by day',
+    desc: 'Grouped under Today and Yesterday, provider mark and status on each row.',
+  },
+  {
+    n: '03',
+    src: 'android-chat.jpg',
+    alt: 'Android app showing a live agent transcript in a chat view',
+    title: 'Watch it work',
+    desc: 'The transcript streams live while the agent runs on your desktop.',
+  },
+  {
+    n: '04',
+    src: 'android-daemon.jpg',
+    alt: 'Android app Add Daemon screen with connection fields and Tailscale guidance',
+    title: 'One-time setup',
+    desc: 'Paste the address and token from Desktop → Settings → Daemon. Tailscale optional.',
+  },
+]
+
+const FACTS: { key: string; value: string }[] = [
+  { key: 'Form', value: 'One native binary. Rust and GPUI. No browser engine.' },
+  { key: 'Platforms', value: 'Windows x86_64 · arm64 · Android (universal APK)' },
+  { key: 'Session', value: 'One long-lived process per conversation' },
+  { key: 'Storage', value: 'Local. SQLite, blob store, your user profile.' },
+  { key: 'Updates', value: 'In place, from a signed feed. Off switch in Settings.' },
+  { key: 'Licence', value: 'GPL-3.0-only. A fork of an open-source project.' },
+]
+
 function DownloadMenu({
   primaryUrl,
   assets,
-  variant = 'primary',
-  showIcon = false,
+  compact = false,
 }: {
   primaryUrl: string
   assets: {
@@ -185,8 +127,7 @@ function DownloadMenu({
     portableX64: string
     apk: string
   } | null
-  variant?: 'primary' | 'outline'
-  showIcon?: boolean
+  compact?: boolean
 }) {
   const itemClassName =
     'flex h-8 cursor-default items-center gap-2 rounded-[4px] px-2.5 text-sm outline-none data-highlighted:bg-[var(--color-paper-3)] data-highlighted:text-[var(--color-ink)] data-disabled:pointer-events-none data-disabled:opacity-45'
@@ -194,12 +135,10 @@ function DownloadMenu({
   return (
     <Menu.Root>
       <Menu.Trigger
-        aria-label="Download for Windows"
-        className={variant === 'primary' ? 'btn btn-primary' : 'btn btn-outline'}
+        aria-label="Download"
+        className="k2-btn"
       >
-        {showIcon && <Download data-icon="inline-start" />}
-        {/* The header row cannot fit the full label at 320px, so the visible
-            text shortens while aria-label keeps the accessible name complete. */}
+        {!compact && <Download data-icon="inline-start" />}
         <span className="hidden sm:inline">Download for Windows</span>
         <span className="sm:hidden">Download</span>
       </Menu.Trigger>
@@ -211,11 +150,7 @@ function DownloadMenu({
           className="isolate z-50"
         >
           <Menu.Popup className="min-w-64 origin-(--transform-origin) rounded-[6px] border border-[var(--color-rule)] bg-[var(--color-paper-2)] p-1 text-[var(--color-ink)] shadow-md outline-none data-[side=bottom]:slide-in-from-top-1 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95">
-            <Menu.LinkItem
-              href={primaryUrl}
-              closeOnClick
-              className={itemClassName}
-            >
+            <Menu.LinkItem href={primaryUrl} closeOnClick className={itemClassName}>
               Windows (x86_64 installer)
             </Menu.LinkItem>
             <Menu.LinkItem
@@ -240,11 +175,7 @@ function DownloadMenu({
               <Smartphone className="size-3.5 shrink-0 opacity-70" />
               Android (universal APK)
             </Menu.LinkItem>
-            <Menu.LinkItem
-              href={RELEASES_URL}
-              closeOnClick
-              className={itemClassName}
-            >
+            <Menu.LinkItem href={RELEASES_URL} closeOnClick className={itemClassName}>
               All releases
             </Menu.LinkItem>
             <Menu.LinkItem
@@ -254,7 +185,7 @@ function DownloadMenu({
               closeOnClick
               className={itemClassName}
             >
-              Requirements & docs
+              Requirements &amp; docs
             </Menu.LinkItem>
           </Menu.Popup>
         </Menu.Positioner>
@@ -263,267 +194,255 @@ function DownloadMenu({
   )
 }
 
-function VersionChip({ version }: { version: string }) {
-  return (
-    <span className="mono text-xs text-[var(--color-muted)]">v{version}</span>
-  )
-}
-
-function Home() {
+function V2() {
   const { data: release } = useQuery(releaseQuery)
   const primaryUrl = release?.assets?.x64 ?? RELEASES_URL
 
+  // The SSR pass never has release data (the prefetch is fire-and-forget),
+  // but the client may hydrate with React Query's cache already filled.
+  // Rendering version text only after mount keeps the first client paint
+  // identical to the server HTML, which the SSR tree requires.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const version = mounted && release ? release.version : null
+
   return (
-    <TooltipProvider>
-      <div className="min-h-dvh">
-        <div className="shell">
-          {/* N9 · Edge-aligned minimal. Wordmark left, one action right, and a
-              deliberate void between them. The absence is the design. */}
-          <header className="flex items-center justify-between py-[var(--space-md)]">
-            <a
-              href={import.meta.env.BASE_URL}
-              className="flex items-center gap-[0.6rem] no-underline"
-            >
-              {/* The mark carries its own dark background, so it reads as a tile
-                  in either theme rather than as a floating glyph. */}
-              <img
-                src={`${import.meta.env.BASE_URL}app-icon.png`}
-                alt=""
-                width={24}
-                height={24}
-                className="brand-mark size-6"
-              />
-              <span className="wordmark text-[1.0625rem] text-[var(--color-ink)]">
-                {APP_NAME}
-              </span>
+    <div className="k2 min-h-dvh">
+      {/* N7 · Brutal slab */}
+      <header className="k2-nav">
+        <nav className="k2-nav-inner" aria-label="Primary">
+          <a href={import.meta.env.BASE_URL} className="k2-wordmark">
+            {APP_NAME}
+          </a>
+          <div className="k2-links">
+            <ThemeToggle />
+            <a href={`${import.meta.env.BASE_URL}#harnesses`} className="k2-link">
+              Harnesses
             </a>
-            <div className="flex items-center gap-[var(--space-2xs)]">
-              <ThemeToggle />
-              <DownloadMenu
-                primaryUrl={primaryUrl}
-                assets={release?.assets ?? null}
-                variant="outline"
-              />
-            </div>
-          </header>
+            <a href={`${import.meta.env.BASE_URL}#download`} className="k2-link">
+              Download
+            </a>
+          </div>
+        </nav>
+      </header>
 
-          <main>
-            {/* Opener — a statement, the action, then the facts. No badge,
-                no eyebrow. */}
-            <section className="pt-[var(--space-xl)] pb-[var(--space-2xl)]">
-              <h1 className="display rise text-[length:var(--text-display)]">
-                One window for fourteen coding agents.
-              </h1>
+      <main className="k2-shell">
+        {/* Inventory header: count · qualifier · action. No badge, no eyebrow. */}
+        <section className="pt-[var(--space-xl)] pb-[var(--space-lg)]">
+          <p className="k2-meta">
+            14 harnesses · one window · Windows + Android
+          </p>
+          <h1 className="k2-display mt-[var(--space-sm)] text-[clamp(2.75rem,7vw,5.5rem)]">
+            The harness
+            <br />
+            home.
+          </h1>
+          <p className="prose-measure mt-[var(--space-md)] max-w-[52ch] text-[length:var(--text-md)] leading-[1.55] text-[var(--color-ink-2)]">
+            Every agent CLI you already run, driven from one native window over
+            its own protocol. No new keys, no new subscriptions, no browser
+            engine in the binary.
+          </p>
+          <div className="mt-[var(--space-lg)] flex flex-wrap items-center gap-[var(--space-sm)]">
+            <DownloadMenu primaryUrl={primaryUrl} assets={release?.assets ?? null} />
+            {version && <span className="k2-meta">v{version}</span>}
+          </div>
+        </section>
 
-              <p className="prose-measure mt-[var(--space-md)] text-[length:var(--text-md)] leading-[1.55] text-[var(--color-ink-2)] text-pretty">
-                It drives the agent CLIs already on your machine, over their own
-                protocols, with your sessions and transcripts on your own disk.
-              </p>
-
-              <div className="mt-[var(--space-lg)] flex flex-wrap items-center gap-x-[var(--space-sm)] gap-y-[var(--space-xs)]">
-                <DownloadMenu
-                  primaryUrl={primaryUrl}
-                  assets={release?.assets ?? null}
-                  showIcon
-                />
-                {release && <VersionChip version={release.version} />}
-              </div>
-
-              {/* Providers sit directly under the action, so the reader learns
-                  which agents are covered before the spec sheet asks them to
-                  read further. */}
-              <div className="mt-[var(--space-xl)]">
-                <Label>Drives the agents you already use</Label>
-                <div className="mt-[var(--space-sm)] flex flex-wrap items-center gap-x-[var(--space-lg)] gap-y-[var(--space-sm)]">
-                  {PROVIDERS.map((p) => (
-                    <Tooltip key={p.slug}>
-                      <TooltipTrigger
-                        render={
-                          <button
-                            type="button"
-                            aria-label={p.label}
-                            className="cursor-default rounded-[2px] text-[var(--color-muted)] outline-none transition-colors hover:text-[var(--color-ink)] focus-visible:text-[var(--color-ink)]"
-                          />
-                        }
-                      >
-                        <span
-                          className="provider-mark size-[20px]"
-                          style={{
-                            maskImage: `url(${import.meta.env.BASE_URL}providers/${p.slug}.svg)`,
-                            WebkitMaskImage: `url(${import.meta.env.BASE_URL}providers/${p.slug}.svg)`,
-                          }}
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>{p.label}</TooltipContent>
-                    </Tooltip>
-                  ))}
+        {/* The catalogue body. Uniform cells, one provider each. */}
+        <section id="harnesses" aria-labelledby="harnesses-heading" className="pb-[var(--space-lg)]">
+          <div className="flex items-baseline justify-between gap-[var(--space-md)] pb-[var(--space-sm)]">
+            <h2 id="harnesses-heading" className="k2-label">
+              Index of harnesses
+            </h2>
+            <p className="k2-meta">14 / 14</p>
+          </div>
+          <ul className="k2-grid" role="list">
+            {PROVIDERS.map((p, i) => (
+              <li key={p.slug} className="k2-card">
+                <div className="k2-card-top">
+                  <span className="k2-num">{String(i + 1).padStart(2, '0')}</span>
+                  {p.flag && <span className="k2-flag">{p.flag}</span>}
                 </div>
+                <div className="flex items-center gap-[var(--space-2xs)]">
+                  <span
+                    className="k2-mark"
+                    style={{
+                      maskImage: `url(${import.meta.env.BASE_URL}providers/${p.slug}.svg)`,
+                      WebkitMaskImage: `url(${import.meta.env.BASE_URL}providers/${p.slug}.svg)`,
+                    }}
+                    aria-hidden="true"
+                  />
+                  <span className="k2-card-name">{p.label}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p className="prose-measure mt-[var(--space-md)] text-[length:var(--text-sm)] leading-[1.65] text-[var(--color-muted)]">
+            Stream-json, JSON-RPC, the Agent Client Protocol, SSE, NDJSON —
+            normalized into one model. Each agent keeps its own context when
+            you switch mid-project.
+          </p>
+        </section>
+
+        {/* The product, shown plainly. No re-drawn chrome. */}
+        <figure className="k2-figure">
+          <img
+            src={`${import.meta.env.BASE_URL}app-screenshot-dark.png`}
+            alt={`${APP_NAME} showing a coding-agent session: task list on the left, transcript and tool activity in the centre, file diffs on the right`}
+            width={2266}
+            height={1752}
+            className="shot shot-dark block h-auto w-full"
+          />
+          <img
+            src={`${import.meta.env.BASE_URL}app-screenshot-light.png`}
+            alt={`${APP_NAME} showing a coding-agent session: task list on the left, transcript and tool activity in the centre, file diffs on the right`}
+            width={2266}
+            height={1752}
+            className="shot shot-light block h-auto w-full"
+          />
+          <figcaption className="mono border-t border-[var(--color-ink)] px-[var(--space-md)] py-[var(--space-sm)] text-xs text-[var(--color-muted)]">
+            Tasks left. Transcript centre. Diffs right.
+          </figcaption>
+        </figure>
+
+        {/* Facts. Flat cells, no prose. */}
+        <section aria-labelledby="facts-heading" className="pt-[var(--space-xl)] pb-[var(--space-lg)]">
+          <h2 id="facts-heading" className="k2-label pb-[var(--space-sm)]">
+            Facts
+          </h2>
+          <div className="k2-facts">
+            {FACTS.map((f) => (
+              <div key={f.key}>
+                <p className="k2-num">{f.key}</p>
+                <p className="mt-[var(--space-3xs)] text-[length:var(--text-sm)] leading-[1.6] text-[var(--color-ink-2)]">
+                  {f.value}
+                </p>
               </div>
+            ))}
+          </div>
+        </section>
 
-              {/* F3 · Tabular spec sheet. The facts carry the opener. */}
-              <dl className="mt-[var(--space-2xl)] grid grid-cols-[minmax(0,1fr)] border-t border-[var(--color-rule)]">
-                {SPEC.map((row) => (
-                  <div
-                    key={row.key}
-                    className="grid grid-cols-[minmax(0,1fr)] gap-x-[var(--space-md)] gap-y-[var(--space-3xs)] border-b border-[var(--color-rule-2)] py-[var(--space-sm)] sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)]"
-                  >
-                    <dt className="label pt-[0.2em]">{row.key}</dt>
-                    <dd className="text-[length:var(--text-sm)] leading-[1.6] text-[var(--color-ink-2)]">
-                      {row.value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </section>
+        {/* Android companion. F5 · Annotated screenshot — the numbered
+            legend IS the description; each phone names its own step. The
+            strip scrolls sideways on narrow screens and the legend restacks
+            into a plain list, so the annotations never float loose. */}
+        <section
+          id="android"
+          aria-labelledby="android-heading"
+          className="border-t border-[var(--color-ink)] py-[var(--space-lg)]"
+        >
+          <div className="flex flex-wrap items-baseline justify-between gap-[var(--space-md)]">
+            <h2 id="android-heading" className="k2-display text-[length:var(--text-xl)]">
+              The phone comes too.
+            </h2>
+            <p className="k2-meta">Android · universal APK</p>
+          </div>
+          <p className="prose-measure mt-[var(--space-sm)] text-[length:var(--text-base)] leading-[1.65] text-[var(--color-ink-2)]">
+            A companion that connects to the daemon on your Windows machine
+            over WebSocket. Your sessions live on the desktop; the phone is a
+            window onto them. Over Tailscale it reaches your machine from any
+            network, with no port forwarding.
+          </p>
 
-            {/* The product, shown plainly. No re-drawn chrome around it.
-                Both captures ship and CSS picks one, so the screenshot follows
-                the site's theme toggle rather than the OS preference. */}
-            <figure className="overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-rule)]">
-              <img
-                src={`${import.meta.env.BASE_URL}app-screenshot-dark.png`}
-                alt={`${APP_NAME} showing a coding-agent session: task list on the left, transcript and tool activity in the centre, file diffs on the right`}
-                width={2266}
-                height={1752}
-                className="shot shot-dark block h-auto w-full"
-              />
-              <img
-                src={`${import.meta.env.BASE_URL}app-screenshot-light.png`}
-                alt={`${APP_NAME} showing a coding-agent session: task list on the left, transcript and tool activity in the centre, file diffs on the right`}
-                width={2266}
-                height={1752}
-                className="shot shot-light block h-auto w-full"
-              />
-              <figcaption className="mono border-t border-[var(--color-rule-2)] py-[var(--space-sm)] text-xs text-[var(--color-muted)]">
-                A session in progress. Tasks on the left, transcript in the
-                middle, diffs on the right.
-              </figcaption>
-            </figure>
-
-            {/* The interview. Each heading is the question. */}
-            <section
-              aria-labelledby="interview-heading"
-              className="py-[var(--space-2xl)]"
-            >
-              <h2
-                id="interview-heading"
-                className="display text-[length:var(--text-xl)]"
-              >
-                Straight answers
-              </h2>
-
-              <div className="mt-[var(--space-lg)]">
-                {INTERVIEW.map((item) => (
-                  <div
-                    key={item.q}
-                    className="flex flex-col gap-[var(--space-sm)] border-t border-[var(--color-rule)] py-[var(--space-lg)]"
-                  >
-                    <h3 className="display max-w-[24ch] text-[length:var(--text-lg)] text-[var(--color-ink)]">
-                      {item.q}
-                    </h3>
-                    <div className="prose-measure flex flex-col gap-[var(--space-sm)]">
-                      {item.a.map((paragraph) => (
-                        <p
-                          key={paragraph}
-                          className="text-[length:var(--text-base)] leading-[1.65] text-[var(--color-ink-2)]"
-                        >
-                          {paragraph}
-                        </p>
-                      ))}
+          <ol className="k2-android mt-[var(--space-lg)] m-0 list-none p-0">
+            {ANDROID_SHOTS.map((s) => (
+              <li key={s.n} className="k2-android-step">
+                <div className="k2-android-device">
+                  {/* Pixel 6 Pro frame from devices.css (MIT). The library is
+                      fixed at 404×862, so the wrapper scales it to fit. */}
+                  <div className="k2-phone-scale">
+                    <div className="device device-google-pixel-6-pro">
+                      <div className="device-frame">
+                        <img
+                          src={`${import.meta.env.BASE_URL}${s.src}`}
+                          alt={s.alt}
+                          width={1080}
+                          height={2340}
+                          loading="lazy"
+                          className="device-screen k2-phone-shot"
+                        />
+                      </div>
+                      <div className="device-stripe" />
+                      <div className="device-header" />
+                      <div className="device-sensors" />
+                      <div className="device-btns" />
+                      <div className="device-power" />
                     </div>
                   </div>
-                ))}
-              </div>
-            </section>
+                </div>
+                <div className="k2-android-note">
+                  <p className="k2-num">{s.n}</p>
+                  <h3 className="k2-note-title">{s.title}</h3>
+                  <p className="mt-[var(--space-3xs)] text-[length:var(--text-sm)] leading-[1.6] text-[var(--color-ink-2)]">
+                    {s.desc}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
 
-            {/* Download. */}
-            <section
-              id="download"
-              aria-labelledby="download-heading"
-              className="border-t border-[var(--color-rule)] py-[var(--space-2xl)]"
+        {/* Download. */}
+        <section
+          id="download"
+          aria-labelledby="download-heading"
+          className="border-t border-[var(--color-ink)] py-[var(--space-lg)]"
+        >
+          <h2 id="download-heading" className="k2-display text-[length:var(--text-xl)]">
+            Get it.
+          </h2>
+          <p className="prose-measure mt-[var(--space-sm)] text-[length:var(--text-base)] leading-[1.65] text-[var(--color-ink-2)]">
+            Install one agent CLI and authenticate it first; {APP_NAME} drives
+            those, it does not replace them. The first install is the manual
+            one — after that, updates arrive in place. The Android APK is in
+            the same menu and pairs with the desktop daemon.
+          </p>
+          <div className="mt-[var(--space-lg)] flex flex-wrap items-center gap-x-[var(--space-sm)] gap-y-[var(--space-xs)]">
+            <DownloadMenu primaryUrl={primaryUrl} assets={release?.assets ?? null} compact />
+            <a
+              className="k2-link"
+              href={WINDOWS_DOCS_URL}
+              target="_blank"
+              rel="noreferrer"
             >
-              <h2
-                id="download-heading"
-                className="display text-[length:var(--text-xl)]"
-              >
-                Get {APP_NAME}
-              </h2>
-              <p className="prose-measure mt-[var(--space-sm)] text-[length:var(--text-base)] leading-[1.65] text-[var(--color-ink-2)]">
-                A per-user installer for Windows, a portable archive beside it,
-                and an arm64 build for ARM machines. The Android companion ships
-                as a universal APK. Install and authenticate at least one agent
-                CLI first; {APP_NAME} drives those, it does not replace them.
-                This first install is the manual one: the Windows and Android
-                builds update themselves from here on.
-              </p>
-              <div className="mt-[var(--space-lg)] flex flex-wrap items-center gap-x-[var(--space-sm)] gap-y-[var(--space-xs)]">
-                <DownloadMenu
-                  primaryUrl={primaryUrl}
-                  assets={release?.assets ?? null}
-                  showIcon
-                />
-                <a
-                  className="link text-[length:var(--text-sm)]"
-                  href={WINDOWS_DOCS_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Requirements
-                </a>
-                <a
-                  className="link text-[length:var(--text-sm)]"
-                  href={CHANGELOG_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  What&apos;s new
-                </a>
-                <a
-                  className="link text-[length:var(--text-sm)]"
-                  href={GITHUB_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Source
-                </a>
-                {release && <VersionChip version={release.version} />}
-              </div>
-            </section>
-          </main>
+              Requirements
+            </a>
+            <a className="k2-link" href={CHANGELOG_URL} target="_blank" rel="noreferrer">
+              What&apos;s new
+            </a>
+            <a className="k2-link" href={GITHUB_URL} target="_blank" rel="noreferrer">
+              Source
+            </a>
+          </div>
+        </section>
+      </main>
 
-          {/* Ft4 · Dense typographic colophon. */}
-          <footer className="colophon border-t border-[var(--color-rule)] py-[var(--space-xl)]">
-            <p className="mono max-w-[70ch] text-xs leading-[1.8] text-[var(--color-muted)]">
-              {APP_NAME}
-              {release ? ` v${release.version}` : ''}. Built by{' '}
-              <a
-                className="link"
-                href="https://yafialhakim.netlify.app"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Yafi Alhakim
-              </a>
-              , as a fork of an open-source GPL-3.0 coding-agent client by{' '}
-              <a
-                className="link"
-                href={UPSTREAM_URL}
-                target="_blank"
-                rel="noreferrer"
-              >
-                egoist
-              </a>
-              . Written in Rust with GPUI. Set in Space Grotesk, Geist, and Geist
-              Mono. Ships for Windows and Android; the macOS and Linux builds in
-              the source tree go unmaintained. Source and releases at{' '}
-              <a className="link" href={GITHUB_URL} target="_blank" rel="noreferrer">
-                {GITHUB_URL.replace('https://', '')}
-              </a>
-              .
-            </p>
-          </footer>
+      {/* Ft2 · Inline single line */}
+      <footer className="k2-footer">
+        <div className="k2-footer-inner">
+          {APP_NAME}
+          {version ? ` v${version}` : ''} · Rust + GPUI · GPL-3.0-only
+          · Fork of{' '}
+          <a href={UPSTREAM_URL} target="_blank" rel="noreferrer">
+            egoist/waku
+          </a>{' '}
+          · Built by{' '}
+          <a
+            href="https://yafialhakim.netlify.app"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Yafi Alhakim
+          </a>{' '}
+          ·{' '}
+          <a
+            href={`${import.meta.env.BASE_URL}v1`}
+            className="whitespace-nowrap"
+          >
+            Previous landing
+          </a>
         </div>
-      </div>
-    </TooltipProvider>
+      </footer>
+    </div>
   )
 }
